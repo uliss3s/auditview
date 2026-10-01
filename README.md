@@ -8,6 +8,13 @@ It reads what `auditd` already writes to `/var/log/audit/audit.log`
 (rules in `/etc/audit/rules.d/50-exec-audit.rules`), stores it in SQLite, and
 serves pages on `127.0.0.1` only.
 
+> **Heads up:** this is a personal side project, mostly "vibe coded" with an AI
+> assistant rather than written and reviewed line by line. It works well enough
+> for keeping an eye on my own machine, but it hasn't been audited or tested
+> much beyond that. Feel free to try it or borrow ideas from it, but please
+> don't rely on it in production or anywhere security really matters. It runs
+> with `sudo`, after all.
+
 ## Build and run
 
 ```sh
