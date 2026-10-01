@@ -1,0 +1,35 @@
+{{define "content"}}{{with .Data}}
+<form class="filters" method="get" action="/sessions">
+  <input type="hidden" name="range" value="{{$.Range}}">
+  <label>User
+    <select name="user"><option value="">All</option>{{range .Users}}<option {{if eq . $.Data.F.User}}selected{{end}}>{{.}}</option>{{end}}</select>
+  </label>
+  <label>Source address <input type="search" name="addr" value="{{.F.Addr}}" placeholder="e.g. 198.51.100.7"></label>
+  <label class="check"><input type="checkbox" name="remote" value="1" {{if .F.RemoteOnly}}checked{{end}}> Remote only</label>
+  <label class="check"><input type="checkbox" name="cmds" value="1" {{if .F.WithCmds}}checked{{end}}> With commands</label>
+  <button type="submit">Filter</button>
+  <a class="reset" href="/sessions?range={{$.Range}}">Reset</a>
+</form>
+<section class="card flush">
+<div class="scroll">
+<table class="log">
+  <thead><tr><th>Started</th><th>User</th><th>Type</th><th>From</th><th>Duration</th><th class="n">Commands</th><th class="n">Privileged</th><th>Last activity</th></tr></thead>
+  <tbody>
+  {{range .Rows}}
+  <tr>
+    <td class="nowrap"><a href="/sessions/{{.ID}}">{{ts .StartTS}}</a>{{if .Partial}} <span class="pill normal" title="The login happened before the oldest log data; its origin is unknown.">earlier</span>{{end}}</td>
+    <td>{{default "?" .Auid}}</td>
+    <td><span class="pill kind">{{.Kind}}</span></td>
+    <td>{{if .Addr}}<code>{{.Addr}}</code>{{if .Hostname}} <small>{{.Hostname}}</small>{{end}}{{else}}<span class="muted">{{default "—" .Terminal}}</span>{{end}}</td>
+    <td>{{dur .StartTS .EndTS.Int64}}</td>
+    <td class="n">{{num .Commands}}</td>
+    <td class="n">{{if .Privileged}}<span class="pill critical">{{num .Privileged}}</span>{{else}}0{{end}}</td>
+    <td class="nowrap" title="{{ts .LastActive}}">{{ago .LastActive}}</td>
+  </tr>
+  {{else}}<tr><td colspan="8" class="empty">No sessions in this period.</td></tr>{{end}}
+  </tbody>
+</table>
+</div>
+</section>
+<p class="note">Up to 300 sessions are listed, newest first. A session is one login (SSH, console, desktop, cron, systemd user manager); everything run through <code>sudo</code> inside it stays in the same session.</p>
+{{end}}{{end}}

@@ -1,0 +1,67 @@
+{{define "content"}}{{$r := .Range}}{{with .Data}}
+<section class="card flush">
+  <div class="card-head pad"><h2>Incoming: where logins came from</h2></div>
+  <div class="scroll">
+  <table class="log">
+    <thead><tr><th>Source address</th><th>Users</th><th class="n">Successful logins</th><th class="n">Failed attempts</th><th>Accounts tried (failed)</th><th>First seen</th><th>Last seen</th></tr></thead>
+    <tbody>
+    {{range .Sources}}
+    <tr class="{{if and .Failures (not .Sessions)}}failed{{end}}">
+      <td><code>{{.Addr}}</code>{{if .Hostname}} <small>{{.Hostname}}</small>{{end}}</td>
+      <td>{{join .Users ", "}}</td>
+      <td class="n">{{if .Sessions}}<a href="/sessions?range={{$r}}&addr={{.Addr}}">{{num .Sessions}}</a>{{else}}0{{end}}</td>
+      <td class="n">{{if .Failures}}<span class="pill critical">{{num .Failures}}</span>{{else}}0{{end}}</td>
+      <td>{{join .FailedAccts ", "}}</td>
+      <td class="nowrap">{{ts .FirstTS}}</td>
+      <td class="nowrap" title="{{ts .LastTS}}">{{ago .LastTS}}</td>
+    </tr>
+    {{else}}<tr><td colspan="7" class="empty">No remote logins or failed remote attempts in this period.</td></tr>{{end}}
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="card flush">
+  <div class="card-head pad"><h2>Outgoing: hosts contacted by network tools</h2><span class="muted">ssh, scp, sftp, rsync, curl, wget, ncat, socat, nmap, tcpdump · parsed from command lines (best effort)</span></div>
+  <div class="scroll">
+  <table class="log">
+    <thead><tr><th>Target</th><th>Tools</th><th>Users</th><th class="n">Times</th><th>Last</th></tr></thead>
+    <tbody>
+    {{range .Outbound}}
+    <tr><td><a href="/commands?range={{$r}}&key=%40network&q={{.Target}}"><code>{{.Target}}</code></a></td><td>{{join .Tools ", "}}</td><td>{{join .Users ", "}}</td><td class="n">{{num .Count}}</td><td class="nowrap" title="{{ts .LastTS}}">{{ago .LastTS}}</td></tr>
+    {{else}}<tr><td colspan="5" class="empty">No outgoing connections by network tools in this period.</td></tr>{{end}}
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section class="card flush">
+  <div class="card-head pad">
+    <h2>Authentication events</h2>
+    <form class="inline" method="get" action="/connections">
+      <input type="hidden" name="range" value="{{$r}}">
+      <label class="check"><input type="checkbox" name="failed" value="1" {{if .Failed}}checked{{end}}> Failed only</label>
+      <label class="check"><input type="checkbox" name="remote" value="1" {{if .Remote}}checked{{end}}> Remote only</label>
+      <button type="submit">Apply</button>
+    </form>
+  </div>
+  <div class="scroll">
+  <table class="log">
+    <thead><tr><th>Time</th><th>Event</th><th>Account</th><th>From</th><th>Program</th><th>Result</th></tr></thead>
+    <tbody>
+    {{range .Auth}}
+    <tr class="{{if not .Success}}failed{{end}}">
+      <td class="nowrap">{{ts .TS}}</td>
+      <td>{{.Type}} <small class="muted">{{.Op}}</small></td>
+      <td>{{default .Auid .Acct}}</td>
+      <td>{{if .Addr}}<code>{{.Addr}}</code>{{else}}<span class="muted">{{default "local" .Terminal}}</span>{{end}}</td>
+      <td><code>{{base .Exe}}</code></td>
+      <td>{{if .Success}}<span class="pill ok">success</span>{{else}}<span class="pill critical">failed</span>{{end}}</td>
+    </tr>
+    {{else}}<tr><td colspan="6" class="empty">No authentication events in this period.</td></tr>{{end}}
+    </tbody>
+  </table>
+  </div>
+</section>
+<p class="note">Failed SSH <em>public-key</em> attempts never reach PAM, so they are not in the audit log; only password/keyboard-interactive failures and account checks appear here.</p>
+{{end}}{{end}}

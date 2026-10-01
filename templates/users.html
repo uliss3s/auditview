@@ -1,0 +1,24 @@
+{{define "content"}}{{$r := .Range}}{{with .Data}}
+<section class="card flush">
+<div class="scroll">
+<table class="log">
+  <thead><tr><th>User</th><th class="n">Commands</th><th class="n">Privileged</th><th class="n">Failed</th><th class="n">Logins</th><th class="n">Remote logins</th><th>Source addresses</th><th>Last seen</th></tr></thead>
+  <tbody>
+  {{range .Rows}}
+  <tr>
+    <td><b>{{.Name}}</b></td>
+    <td class="n"><a href="/commands?range={{$r}}&user={{.Name}}">{{num .Commands}}</a></td>
+    <td class="n">{{if .Privileged}}<a class="pill critical" href="/commands?range={{$r}}&user={{.Name}}&key=%40privileged">{{num .Privileged}}</a>{{else}}0{{end}}</td>
+    <td class="n">{{if .Failed}}<a href="/commands?range={{$r}}&user={{.Name}}&failed=1">{{num .Failed}}</a>{{else}}0{{end}}</td>
+    <td class="n"><a href="/sessions?range={{$r}}&user={{.Name}}">{{num .Sessions}}</a></td>
+    <td class="n">{{num .RemoteSessions}}</td>
+    <td>{{range .Addrs}}<a class="chip" href="/sessions?range={{$r}}&addr={{.}}">{{.}}</a>{{else}}<span class="muted">local only</span>{{end}}</td>
+    <td class="nowrap" title="{{ts .LastTS}}">{{ago .LastTS}}</td>
+  </tr>
+  {{else}}<tr><td colspan="8" class="empty">No user activity in this period.</td></tr>{{end}}
+  </tbody>
+</table>
+</div>
+</section>
+<p class="note">Users are identified by their <em>login</em> user (audit uid): commands run through <code>sudo</code> or <code>su</code> are still attributed to the person who logged in.</p>
+{{end}}{{end}}

@@ -1,0 +1,83 @@
+{{define "layout.html"}}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{if .Refresh}}<meta http-equiv="refresh" content="5">{{end}}
+<title>{{.Title}} · auditview</title>
+<link rel="stylesheet" href="/static/style.css">
+<link rel="icon" href="/static/icon.svg">
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="/"><img src="/static/icon.svg" alt="" width="20" height="20">auditview</a>
+  <nav>
+    <a href="/?range={{.Range}}" {{if eq .Active "overview"}}class="on"{{end}}>Overview</a>
+    <a href="/commands?range={{.Range}}" {{if eq .Active "commands"}}class="on"{{end}}>Commands</a>
+    <a href="/sessions?range={{.Range}}" {{if or (eq .Active "sessions") (eq .Active "session")}}class="on"{{end}}>Sessions</a>
+    <a href="/users?range={{.Range}}" {{if eq .Active "users"}}class="on"{{end}}>Users</a>
+    <a href="/connections?range={{.Range}}" {{if eq .Active "connections"}}class="on"{{end}}>Connections</a>
+    <a href="/changes?range={{.Range}}" {{if eq .Active "changes"}}class="on"{{end}}>Changes</a>
+    <a href="/data" {{if eq .Active "data"}}class="on"{{end}}>Data</a>
+  </nav>
+  {{with .Status}}
+  <span class="status {{if .Err}}bad{{else if eq .State "live"}}ok{{else}}warn{{end}}" title="{{.Err}}">
+    {{if .Err}}Error{{else if eq .State "live"}}Live{{else if eq .State "catching up"}}Importing logs…{{else}}{{.State}}{{end}}
+    {{if .LastEvent}}<small>last event {{ago .LastEvent}}</small>{{end}}
+  </span>
+  {{end}}
+</header>
+{{if .Status.Err}}<div class="banner bad">{{.Status.Err}}</div>{{end}}
+{{if and (ne .Active "data") (ne .Active "session")}}
+<div class="ranges" aria-label="Time range">
+  <span>Showing</span>
+  {{range .Ranges}}<a href="{{.URL}}" {{if .Active}}class="on" aria-current="true"{{end}}>{{.Label}}</a>{{end}}
+</div>
+{{end}}
+<main>
+{{template "content" .}}
+</main>
+</body>
+</html>{{end}}
+
+{{define "execTable"}}
+<div class="scroll">
+<table class="log">
+  <thead><tr><th>Time</th><th>User</th><th>As</th><th>Command</th><th>Key</th><th>Session</th></tr></thead>
+  <tbody>
+  {{range .}}
+  <tr class="{{if not .Success}}failed{{end}}">
+    <td class="nowrap" title="{{ago .TS}}">{{ts .TS}}</td>
+    <td>{{.Auid}}</td>
+    <td>{{if eq .EUID "root"}}<span class="pill critical">root</span>{{else}}{{.EUID}}{{end}}</td>
+    <td class="cmd"><code title="{{.Exe}} · cwd {{.Cwd}}">{{.Cmdline}}</code>{{if not .Success}} <span class="pill critical">failed</span>{{end}}</td>
+    <td><span class="pill {{level .Key}}">{{default "—" .Key}}</span></td>
+    <td class="nowrap">{{if .SessionID.Valid}}<a href="/sessions/{{.SessionID.Int64}}">{{if .Addr}}{{.Addr}}{{else}}{{default "local" .TTY}}{{end}}</a>{{else}}—{{end}}</td>
+  </tr>
+  {{else}}<tr><td colspan="6" class="empty">Nothing recorded.</td></tr>{{end}}
+  </tbody>
+</table>
+</div>
+{{end}}
+
+{{define "changeTable"}}
+<div class="scroll">
+<table class="log">
+  <thead><tr><th>Time</th><th>Type</th><th>Key</th><th>User</th><th>Program</th><th>What</th><th>Result</th><th>Session</th></tr></thead>
+  <tbody>
+  {{range .}}
+  <tr class="{{if not .Success}}failed{{end}}">
+    <td class="nowrap" title="{{ago .TS}}">{{ts .TS}}</td>
+    <td>{{.Kind}}</td>
+    <td>{{if .Key}}<span class="pill {{level .Key}}">{{.Key}}</span>{{else}}—{{end}}</td>
+    <td>{{.Auid}}{{if and .UID (ne .UID .Auid)}} <small class="muted">as {{.UID}}</small>{{end}}</td>
+    <td><code title="{{.Exe}}">{{base .Exe}}</code></td>
+    <td class="cmd"><code>{{.Summary}}</code></td>
+    <td>{{if .Success}}<span class="pill ok">ok</span>{{else}}<span class="pill critical">failed</span>{{end}}</td>
+    <td class="nowrap">{{if .SessionID.Valid}}<a href="/sessions/{{.SessionID.Int64}}">{{default "local" .Addr}}</a>{{else}}—{{end}}</td>
+  </tr>
+  {{else}}<tr><td colspan="8" class="empty">Nothing recorded.</td></tr>{{end}}
+  </tbody>
+</table>
+</div>
+{{end}}

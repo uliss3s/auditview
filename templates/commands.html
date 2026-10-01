@@ -1,0 +1,31 @@
+{{define "content"}}{{with .Data}}
+<form class="filters" method="get" action="/commands">
+  <input type="hidden" name="range" value="{{$.Range}}">
+  <label>User
+    <select name="user"><option value="">All</option>{{range .Users}}<option {{if eq . $.Data.F.User}}selected{{end}}>{{.}}</option>{{end}}</select>
+  </label>
+  <label>Key
+    <select name="key">
+      <option value="">All</option>
+      <option value="@privileged" {{if eq .F.Key "@privileged"}}selected{{end}}>Privileged (priv_esc, root_exec, account_mgmt, kmod)</option>
+      <option value="@network" {{if eq .F.Key "@network"}}selected{{end}}>Network (net_*)</option>
+      {{range .Keys}}<option {{if eq . $.Data.F.Key}}selected{{end}}>{{.}}</option>{{end}}
+    </select>
+  </label>
+  <label class="grow">Command contains
+    <input type="search" name="q" value="{{.F.Q}}" placeholder="e.g. curl, /etc/shadow, docker run">
+  </label>
+  <label class="check"><input type="checkbox" name="root" value="1" {{if .F.AsRoot}}checked{{end}}> Ran as root</label>
+  <label class="check"><input type="checkbox" name="failed" value="1" {{if .F.Failed}}checked{{end}}> Failed only</label>
+  <button type="submit">Filter</button>
+  <a class="reset" href="/commands?range={{$.Range}}">Reset</a>
+</form>
+<section class="card flush">
+  {{template "execTable" .Rows}}
+  <div class="pager">
+    {{if .Prev}}<a href="{{.Prev}}">← Newer</a>{{end}}
+    <span>Page {{.Page}}</span>
+    {{if .Next}}<a href="{{.Next}}">Older →</a>{{end}}
+  </div>
+</section>
+{{end}}{{end}}

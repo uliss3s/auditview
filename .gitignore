@@ -1,0 +1,4 @@
+/auditview
+*.db
+*.db-wal
+*.db-shm

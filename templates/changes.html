@@ -1,0 +1,12 @@
+{{define "content"}}{{$r := .Range}}{{with .Data}}
+<div class="tabs">
+  <a href="/changes?range={{$r}}" {{if eq .Kind ""}}class="on"{{end}}>All</a>
+  {{range .Kinds}}<a href="/changes?range={{$r}}&kind={{.}}" {{if eq . $.Data.Kind}}class="on"{{end}}>{{.}}</a>{{end}}
+</div>
+<section class="card flush">
+  {{template "changeTable" .Rows}}
+</section>
+<p class="note"><b>file</b>: writes or attribute changes to watched files (passwd, shadow, sudoers, PAM, sshd, SSH keys, cron, systemd units, audit config) ·
+<b>sudo</b>: sudo's own record of each command, including denied attempts ·
+<b>kmod</b>: kernel module load/unload · <b>audit_config</b>: audit rules or settings changed. Up to 500 rows.</p>
+{{end}}{{end}}

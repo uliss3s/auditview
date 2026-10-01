@@ -1,0 +1,26 @@
+{{define "content"}}{{with .Data}}{{with .S}}
+<p class="crumbs"><a href="/sessions">Sessions</a> / session {{.Ses}}</p>
+<section class="card">
+  <h2>{{default "unknown user" .Auid}} · {{.Kind}} login{{if .Addr}} from <code>{{.Addr}}</code>{{end}}</h2>
+  <dl class="facts">
+    <div><dt>Started</dt><dd>{{ts .StartTS}}{{if .Partial}} <span class="pill normal">before the oldest log data</span>{{end}}</dd></div>
+    <div><dt>Ended</dt><dd>{{if .EndTS.Valid}}{{ts .EndTS.Int64}} ({{dur .StartTS .EndTS.Int64}}){{else}}still open or not recorded{{end}}</dd></div>
+    <div><dt>Source address</dt><dd>{{default "local" .Addr}}{{if .Hostname}} ({{.Hostname}}){{end}}</dd></div>
+    <div><dt>Terminal</dt><dd>{{default "—" .Terminal}}</dd></div>
+    <div><dt>Login program</dt><dd><code>{{default "—" .Exe}}</code></dd></div>
+    <div><dt>Kernel session id</dt><dd>{{.Ses}}</dd></div>
+    <div><dt>Commands</dt><dd>{{num .Commands}} ({{num .Privileged}} privileged)</dd></div>
+  </dl>
+</section>
+{{end}}
+<section class="card flush">
+  <div class="card-head pad"><h2>Commands, in order</h2></div>
+  {{template "execTable" .Execs}}
+</section>
+{{if .Changes}}
+<section class="card flush">
+  <div class="card-head pad"><h2>Watched changes and sudo records</h2></div>
+  {{template "changeTable" .Changes}}
+</section>
+{{end}}
+{{end}}{{end}}

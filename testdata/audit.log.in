@@ -1,0 +1,95 @@
+type=LOGIN msg=audit(1790860000.000:5000): pid=900 uid=0 subj=? old-auid=4294967295 auid=1000 tty=tty1 old-ses=4294967295 ses=2 res=1<GS>UID="root" OLD-AUID="unset" AUID="alice"
+type=USER_START msg=audit(1790860000.010:5001): pid=900 uid=0 auid=1000 ses=2 subj=? msg='op=PAM:session_open grantors=pam_loginuid,pam_unix acct="alice" exe="/usr/bin/login" hostname=? addr=? terminal=/dev/tty1 res=success'<GS>UID="root" AUID="alice"
+type=USER_ACCT msg=audit(1790860005.000:5010): pid=40000 uid=0 auid=4294967295 ses=4294967295 subj=? msg='op=PAM:accounting grantors=pam_unix,pam_permit acct="alice" exe="/usr/lib/ssh/sshd-session" hostname=198.51.100.7 addr=198.51.100.7 terminal=ssh res=success'<GS>UID="root" AUID="unset"
+type=CRED_ACQ msg=audit(1790860005.010:5011): pid=40000 uid=0 auid=4294967295 ses=4294967295 subj=? msg='op=PAM:setcred grantors=pam_unix acct="alice" exe="/usr/lib/ssh/sshd-session" hostname=198.51.100.7 addr=198.51.100.7 terminal=ssh res=success'<GS>UID="root" AUID="unset"
+type=LOGIN msg=audit(1790860005.020:5012): pid=40000 uid=0 subj=? old-auid=4294967295 auid=1000 tty=(none) old-ses=4294967295 ses=7 res=1<GS>UID="root" OLD-AUID="unset" AUID="alice"
+type=SYSCALL msg=audit(1790860005.020:5012): arch=c000003e syscall=1 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=0 ppid=40010 pid=40000 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=(none) ses=7 comm="sshd-session" exe="/usr/lib/ssh/sshd-session" subj=? key=(null)<GS>ARCH=x86_64 SYSCALL=write AUID="alice" UID="root" GID="root" EUID="root" SUID="root" FSUID="root" EGID="root" SGID="root" FSGID="root"
+type=PROCTITLE msg=audit(1790860005.020:5012): proctitle=737368642D73657373696F6E3A20616C696365205B707269765D
+type=EOE msg=audit(1790860005.020:5012): 
+type=USER_START msg=audit(1790860005.050:5013): pid=40000 uid=0 auid=1000 ses=7 subj=? msg='op=PAM:session_open grantors=pam_loginuid,pam_unix acct="alice" exe="/usr/lib/ssh/sshd-session" hostname=198.51.100.7 addr=198.51.100.7 terminal=ssh res=success'<GS>UID="root" AUID="alice"
+type=SYSCALL msg=audit(1790860010.000:5020): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="ls" exe="/usr/bin/ls" subj=? key="exec"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=EXECVE msg=audit(1790860010.000:5020): argc=3 a0="ls" a1="-la" a2="/tmp"
+type=CWD msg=audit(1790860010.000:5020): cwd="/home/alice"
+type=PATH msg=audit(1790860010.000:5020): item=0 name="/usr/bin/ls" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860010.000:5020): proctitle=78
+type=EOE msg=audit(1790860010.000:5020): 
+type=SYSCALL msg=audit(1790860011.000:5021): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="bash" exe="/usr/bin/bash" subj=? key="exec"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=EXECVE msg=audit(1790860011.000:5021): argc=3 a0="bash" a1="-c" a2=6563686F20226869207468657265223B206964
+type=CWD msg=audit(1790860011.000:5021): cwd="/home/alice"
+type=PATH msg=audit(1790860011.000:5021): item=0 name="/usr/bin/bash" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860011.000:5021): proctitle=78
+type=EOE msg=audit(1790860011.000:5021): 
+type=SYSCALL msg=audit(1790860012.000:5022): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="printf" exe="/usr/bin/printf" subj=? key="exec"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=EXECVE msg=audit(1790860012.000:5022): argc=2 a0="printf" a1_len=10 a1[0]=68656C6C6F a1[1]=776F726C64
+type=CWD msg=audit(1790860012.000:5022): cwd="/home/alice"
+type=PATH msg=audit(1790860012.000:5022): item=0 name="/usr/bin/printf" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860012.000:5022): proctitle=78
+type=EOE msg=audit(1790860012.000:5022): 
+type=SYSCALL msg=audit(1790860020.000:5030): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=7 comm="sudo" exe="/usr/bin/sudo" subj=? key="priv_esc"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="root" GID="root" EUID="root" SUID="root" FSUID="root" EGID="root" SGID="root" FSGID="root"
+type=EXECVE msg=audit(1790860020.000:5030): argc=4 a0="sudo" a1="systemctl" a2="restart" a3="sshd"
+type=CWD msg=audit(1790860020.000:5030): cwd="/home/alice"
+type=PATH msg=audit(1790860020.000:5030): item=0 name="/usr/bin/sudo" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860020.000:5030): proctitle=78
+type=EOE msg=audit(1790860020.000:5030): 
+type=USER_AUTH msg=audit(1790860020.100:5031): pid=40100 uid=1000 auid=1000 ses=7 subj=? msg='op=PAM:authentication grantors=pam_unix acct="alice" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/1 res=success'<GS>UID="alice" AUID="alice"
+type=USER_CMD msg=audit(1790860020.200:5032): pid=40100 uid=1000 auid=1000 ses=7 subj=? msg='cwd="/home/alice" cmd=73797374656D63746C20726573746172742073736864 exe="/usr/bin/sudo" terminal=pts/1 res=success'<GS>UID="alice" AUID="alice"
+type=USER_START msg=audit(1790860020.300:5033): pid=40100 uid=0 auid=1000 ses=7 subj=? msg='op=PAM:session_open grantors=pam_limits,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/1 res=success'<GS>UID="root" AUID="alice"
+type=SYSCALL msg=audit(1790860020.400:5034): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=7 comm="systemctl" exe="/usr/bin/systemctl" subj=? key="persistence"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="root" GID="root" EUID="root" SUID="root" FSUID="root" EGID="root" SGID="root" FSGID="root"
+type=EXECVE msg=audit(1790860020.400:5034): argc=3 a0="systemctl" a1="restart" a2="sshd"
+type=CWD msg=audit(1790860020.400:5034): cwd="/home/alice"
+type=PATH msg=audit(1790860020.400:5034): item=0 name="/usr/bin/systemctl" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860020.400:5034): proctitle=78
+type=EOE msg=audit(1790860020.400:5034): 
+type=USER_END msg=audit(1790860020.500:5035): pid=40100 uid=0 auid=1000 ses=7 subj=? msg='op=PAM:session_close grantors=pam_limits,pam_unix acct="root" exe="/usr/bin/sudo" hostname=? addr=? terminal=/dev/pts/1 res=success'<GS>UID="root" AUID="alice"
+type=SYSCALL msg=audit(1790860025.000:5040): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=7 comm="id" exe="/usr/bin/id" subj=? key="root_exec"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="root" GID="root" EUID="root" SUID="root" FSUID="root" EGID="root" SGID="root" FSGID="root"
+type=EXECVE msg=audit(1790860025.000:5040): argc=1 a0="id"
+type=CWD msg=audit(1790860025.000:5040): cwd="/home/alice"
+type=PATH msg=audit(1790860025.000:5040): item=0 name="/usr/bin/id" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860025.000:5040): proctitle=78
+type=EOE msg=audit(1790860025.000:5040): 
+type=SYSCALL msg=audit(1790860030.000:5050): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="curl" exe="/usr/bin/curl" subj=? key="net_transfer"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=EXECVE msg=audit(1790860030.000:5050): argc=4 a0="curl" a1="-o" a2="out.json" a3="https://example.com/api?x=1"
+type=CWD msg=audit(1790860030.000:5050): cwd="/home/alice"
+type=PATH msg=audit(1790860030.000:5050): item=0 name="/usr/bin/curl" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860030.000:5050): proctitle=78
+type=EOE msg=audit(1790860030.000:5050): 
+type=SYSCALL msg=audit(1790860031.000:5051): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="ssh" exe="/usr/bin/ssh" subj=? key="net_remote"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=EXECVE msg=audit(1790860031.000:5051): argc=5 a0="ssh" a1="-p" a2="2222" a3="admin@192.168.1.50" a4="uptime"
+type=CWD msg=audit(1790860031.000:5051): cwd="/home/alice"
+type=PATH msg=audit(1790860031.000:5051): item=0 name="/usr/bin/ssh" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860031.000:5051): proctitle=78
+type=EOE msg=audit(1790860031.000:5051): 
+type=SYSCALL msg=audit(1790860032.000:5052): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="scp" exe="/usr/bin/scp" subj=? key="net_remote"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=EXECVE msg=audit(1790860032.000:5052): argc=3 a0="scp" a1="notes.txt" a2="backup.lan:/srv/"
+type=CWD msg=audit(1790860032.000:5052): cwd="/home/alice"
+type=PATH msg=audit(1790860032.000:5052): item=0 name="/usr/bin/scp" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860032.000:5052): proctitle=78
+type=EOE msg=audit(1790860032.000:5052): 
+type=SYSCALL msg=audit(1790860040.000:5060): arch=c000003e syscall=59 success=no exit=0 a0=1 a1=2 a2=3 a3=0 items=1 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="bash" exe="/usr/bin/bash" subj=? key="exec"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=CWD msg=audit(1790860040.000:5060): cwd="/home/alice"
+type=PATH msg=audit(1790860040.000:5060): item=0 name="./does-not-exist" nametype=UNKNOWN cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0
+type=PROCTITLE msg=audit(1790860040.000:5060): proctitle=62617368
+type=EOE msg=audit(1790860040.000:5060): 
+type=SYSCALL msg=audit(1790860050.000:5070): arch=c000003e syscall=257 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=7 comm="vim" exe="/usr/bin/vim" subj=? key="sshd_cfg"<GS>ARCH=x86_64 SYSCALL=openat AUID="alice" UID="root" GID="root" EUID="root" SUID="root" FSUID="root" EGID="root" SGID="root" FSGID="root"
+type=CWD msg=audit(1790860050.000:5070): cwd="/etc/ssh"
+type=PATH msg=audit(1790860050.000:5070): item=0 name="/etc/ssh/sshd_config.d/" inode=2 dev=103:02 mode=040755 ouid=0 ogid=0 rdev=00:00 nametype=PARENT cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PATH msg=audit(1790860050.000:5070): item=1 name="sshd_config.d/10-custom.conf" inode=3 dev=103:02 mode=0100644 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790860050.000:5070): proctitle=76696D002F6574632F7373682F737368645F636F6E6669672E642F31302D637573746F6D2E636F6E66
+type=EOE msg=audit(1790860050.000:5070): 
+type=SYSCALL msg=audit(1790860055.000:5080): arch=c000003e syscall=313 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=0 ppid=40010 pid=40020 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=7 comm="modprobe" exe="/usr/bin/kmod" subj=? key="kmod"<GS>ARCH=x86_64 SYSCALL=finit_module AUID="alice" UID="root" GID="root" EUID="root" SUID="root" FSUID="root" EGID="root" SGID="root" FSGID="root"
+type=PROCTITLE msg=audit(1790860055.000:5080): proctitle=6D6F6470726F62650064756D6D79
+type=EOE msg=audit(1790860055.000:5080): 
+type=CONFIG_CHANGE msg=audit(1790860060.000:5090): auid=1000 ses=7 subj=? op=add_rule key="exec" list=4 res=1<GS>AUID="alice"
+type=SYSCALL msg=audit(1790860060.000:5090): arch=c000003e syscall=44 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=0 ppid=40010 pid=40020 auid=1000 uid=0 gid=0 euid=0 suid=0 fsuid=0 egid=0 sgid=0 fsgid=0 tty=pts1 ses=7 comm="auditctl" exe="/usr/bin/auditctl" subj=? key=(null)<GS>ARCH=x86_64 SYSCALL=sendto AUID="alice" UID="root" GID="root" EUID="root" SUID="root" FSUID="root" EGID="root" SGID="root" FSGID="root"
+type=PROCTITLE msg=audit(1790860060.000:5090): proctitle=617564697463746C002D52002F6574632F61756469742F61756469742E72756C6573
+type=EOE msg=audit(1790860060.000:5090): 
+type=USER_AUTH msg=audit(1790860070.000:5100): pid=41000 uid=0 auid=4294967295 ses=4294967295 subj=? msg='op=PAM:authentication grantors=? acct="admin" exe="/usr/lib/ssh/sshd-session" hostname=203.0.113.9 addr=203.0.113.9 terminal=ssh res=failed'<GS>UID="root" AUID="unset"
+type=USER_AUTH msg=audit(1790860071.000:5101): pid=41001 uid=0 auid=4294967295 ses=4294967295 subj=? msg='op=PAM:authentication grantors=? acct="root" exe="/usr/lib/ssh/sshd-session" hostname=203.0.113.9 addr=203.0.113.9 terminal=ssh res=failed'<GS>UID="root" AUID="unset"
+type=USER_AUTH msg=audit(1790860072.000:5102): pid=41002 uid=0 auid=4294967295 ses=4294967295 subj=? msg='op=PAM:authentication grantors=? acct="oracle" exe="/usr/lib/ssh/sshd-session" hostname=203.0.113.9 addr=203.0.113.9 terminal=ssh res=failed'<GS>UID="root" AUID="unset"
+type=USER_END msg=audit(1790860120.000:5200): pid=40000 uid=0 auid=1000 ses=7 subj=? msg='op=PAM:session_close grantors=pam_loginuid,pam_unix acct="alice" exe="/usr/lib/ssh/sshd-session" hostname=198.51.100.7 addr=198.51.100.7 terminal=ssh res=success'<GS>UID="root" AUID="alice"
+type=SYSCALL msg=audit(1790863600.000:140): arch=c000003e syscall=59 success=yes exit=0 a0=1 a1=2 a2=3 a3=0 items=2 ppid=40010 pid=40020 auid=1000 uid=1000 gid=1000 euid=1000 suid=1000 fsuid=1000 egid=1000 sgid=1000 fsgid=1000 tty=pts1 ses=7 comm="cat" exe="/usr/bin/cat" subj=? key="exec"<GS>ARCH=x86_64 SYSCALL=execve AUID="alice" UID="alice" GID="alice" EUID="alice" SUID="alice" FSUID="alice" EGID="alice" SGID="alice" FSGID="alice"
+type=EXECVE msg=audit(1790863600.000:140): argc=2 a0="cat" a1="/etc/hostname"
+type=CWD msg=audit(1790863600.000:140): cwd="/home/alice"
+type=PATH msg=audit(1790863600.000:140): item=0 name="/usr/bin/cat" inode=1 dev=103:02 mode=0100755 ouid=0 ogid=0 rdev=00:00 nametype=NORMAL cap_fp=0 cap_fi=0 cap_fe=0 cap_fver=0 cap_frootid=0<GS>OUID="root" OGID="root"
+type=PROCTITLE msg=audit(1790863600.000:140): proctitle=78
+type=EOE msg=audit(1790863600.000:140): 

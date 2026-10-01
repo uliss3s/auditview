@@ -1,0 +1,40 @@
+{{define "content"}}{{with .Data}}
+{{if .Msg}}<div class="banner ok">{{.Msg}}</div>{{end}}
+<section class="card">
+  <h2>Database</h2>
+  <dl class="facts">
+    <div><dt>File</dt><dd><code>{{.Info.Path}}</code></dd></div>
+    <div><dt>Size on disk</dt><dd>{{bytes .Info.Size}}</dd></div>
+    <div><dt>Commands</dt><dd>{{num .Info.Execs}}</dd></div>
+    <div><dt>Sessions</dt><dd>{{num .Info.Sessions}}</dd></div>
+    <div><dt>Authentication events</dt><dd>{{num .Info.Auth}}</dd></div>
+    <div><dt>Watched changes</dt><dd>{{num .Info.Changes}}</dd></div>
+    <div><dt>Oldest record</dt><dd>{{ts .Info.OldestTS}}</dd></div>
+    <div><dt>Newest record</dt><dd>{{ts .Info.NewestTS}}</dd></div>
+    <div><dt>Imported up to</dt><dd>{{ts .Info.CheckpointTS}}</dd></div>
+    <div><dt>Retention</dt><dd>{{if .Retention}}{{.Retention}} days (older data is deleted automatically){{else}}keep everything{{end}}</dd></div>
+  </dl>
+</section>
+
+<div class="grid2">
+  <section class="card">
+    <h2>Delete old data</h2>
+    <form method="post" action="/data/clear" class="stack">
+      <input type="hidden" name="csrf" value="{{$.CSRF}}">
+      <input type="hidden" name="mode" value="older">
+      <label>Delete everything older than <input type="number" name="days" min="1" value="90" required> days</label>
+      <button type="submit">Delete</button>
+    </form>
+  </section>
+  <section class="card danger">
+    <h2>Delete all data</h2>
+    <p>Removes everything auditview has collected. The audit logs in <code>/var/log/audit</code> are not touched, and already-imported log lines are not imported again.</p>
+    <form method="post" action="/data/clear" class="stack">
+      <input type="hidden" name="csrf" value="{{$.CSRF}}">
+      <input type="hidden" name="mode" value="all">
+      <label>Type <b>DELETE</b> to confirm <input type="text" name="confirm" autocomplete="off" required pattern="DELETE"></label>
+      <button type="submit" class="danger">Delete all data</button>
+    </form>
+  </section>
+</div>
+{{end}}{{end}}

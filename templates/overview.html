@@ -1,0 +1,77 @@
+{{define "content"}}{{$r := .Range}}{{with .Data}}
+<section class="tiles">
+  <a class="tile" href="/commands?range={{$r}}"><b>{{num .Commands}}</b><span>Commands</span></a>
+  <a class="tile crit" href="/commands?range={{$r}}&key=%40privileged"><b>{{num .Privileged}}</b><span>Privileged commands</span></a>
+  <a class="tile" href="/commands?range={{$r}}&failed=1"><b>{{num .Failed}}</b><span>Failed commands</span></a>
+  <a class="tile" href="/sessions?range={{$r}}"><b>{{num .Sessions}}</b><span>Logins</span></a>
+  <a class="tile high" href="/sessions?range={{$r}}&remote=1"><b>{{num .RemoteSessions}}</b><span>Remote logins</span></a>
+  <a class="tile crit" href="/connections?range={{$r}}&failed=1"><b>{{num .FailedAuth}}</b><span>Failed authentications</span></a>
+  <a class="tile high" href="/changes?range={{$r}}"><b>{{num .Changes}}</b><span>Watched changes</span></a>
+</section>
+
+<section class="card">
+  <div class="card-head">
+    <h2>Command activity</h2>
+    <span class="legend"><i class="sw all"></i>All commands <i class="sw priv"></i>Privileged</span>
+  </div>
+  {{if .Chart.Max}}
+  <svg class="chart" viewBox="0 -14 1000 214" preserveAspectRatio="none" role="img" aria-label="Commands over time">
+    <text class="tick" x="0" y="-3">max {{num .Chart.Max}}</text>
+    <line class="axis" x1="0" y1="180" x2="1000" y2="180"></line>
+    {{range .Chart.Bars}}<g><title>{{.Title}}</title><rect class="bar" x="{{.X}}" y="{{.Y}}" width="{{.W}}" height="{{.H}}"></rect>{{if .PH}}<rect class="bar-priv" x="{{.X}}" y="{{.PY}}" width="{{.W}}" height="{{.PH}}"></rect>{{end}}</g>{{end}}
+    {{range .Chart.Ticks}}<text class="tick" x="{{.X}}" y="197" text-anchor="middle">{{.Label}}</text>{{end}}
+  </svg>
+  {{else}}<p class="empty">No commands recorded in this period.</p>{{end}}
+</section>
+
+<div class="grid3">
+  <section class="card">
+    <h2>Top users</h2>
+    <table class="compact">
+      <thead><tr><th>User</th><th class="n">Commands</th><th class="n">Privileged</th></tr></thead>
+      <tbody>{{range .TopUsers}}<tr><td><a href="/commands?range={{$r}}&user={{.Name}}">{{.Name}}</a></td><td class="n">{{num .Count}}</td><td class="n">{{if .Priv}}<span class="pill critical">{{num .Priv}}</span>{{else}}0{{end}}</td></tr>
+      {{else}}<tr><td colspan="3" class="empty">No data</td></tr>{{end}}</tbody>
+    </table>
+  </section>
+  <section class="card">
+    <h2>Top programs</h2>
+    <table class="compact">
+      <thead><tr><th>Program</th><th class="n">Runs</th></tr></thead>
+      <tbody>{{range .TopPrograms}}<tr><td title="{{.Name}}"><a href="/commands?range={{$r}}&q={{base .Name}}">{{base .Name}}</a></td><td class="n">{{num .Count}}</td></tr>
+      {{else}}<tr><td colspan="2" class="empty">No data</td></tr>{{end}}</tbody>
+    </table>
+  </section>
+  <section class="card">
+    <h2>By category</h2>
+    <table class="compact">
+      <thead><tr><th>Key</th><th class="n">Events</th></tr></thead>
+      <tbody>{{range .ByKey}}<tr><td><span class="pill {{level .Name}}">{{default "(none)" .Name}}</span></td><td class="n">{{num .Count}}</td></tr>
+      {{else}}<tr><td colspan="2" class="empty">No data</td></tr>{{end}}</tbody>
+    </table>
+  </section>
+</div>
+
+<section class="card">
+  <div class="card-head"><h2>Latest privileged commands</h2><a href="/commands?range={{$r}}&key=%40privileged">All →</a></div>
+  {{template "execTable" .RecentPriv}}
+</section>
+
+<div class="grid2">
+  <section class="card">
+    <div class="card-head"><h2>Latest remote logins</h2><a href="/connections?range={{$r}}">Connections →</a></div>
+    <table class="compact">
+      <thead><tr><th>When</th><th>User</th><th>From</th><th class="n">Commands</th></tr></thead>
+      <tbody>{{range .RecentRemote}}<tr><td title="{{ts .StartTS}}"><a href="/sessions/{{.ID}}">{{ago .StartTS}}</a></td><td>{{.Auid}}</td><td><code>{{.Addr}}</code>{{if .Hostname}} <small>{{.Hostname}}</small>{{end}}</td><td class="n">{{num .Commands}}</td></tr>
+      {{else}}<tr><td colspan="4" class="empty">No remote logins in this period.</td></tr>{{end}}</tbody>
+    </table>
+  </section>
+  <section class="card">
+    <div class="card-head"><h2>Latest watched changes</h2><a href="/changes?range={{$r}}">All →</a></div>
+    <table class="compact">
+      <thead><tr><th>When</th><th>Key</th><th>What</th></tr></thead>
+      <tbody>{{range .RecentChanges}}<tr><td title="{{ts .TS}}">{{ago .TS}}</td><td><span class="pill {{level .Key}}">{{default .Kind .Key}}</span></td><td class="clip"><code>{{.Summary}}</code></td></tr>
+      {{else}}<tr><td colspan="3" class="empty">No changes in this period.</td></tr>{{end}}</tbody>
+    </table>
+  </section>
+</div>
+{{end}}{{end}}
